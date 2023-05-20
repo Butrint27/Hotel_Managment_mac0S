@@ -7,13 +7,13 @@ package hotel;
 import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.RowFilter;
 import javax.swing.table.DefaultTableModel;
@@ -24,15 +24,15 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Butrint Bajrami
  */
-public class Admin_Client extends javax.swing.JFrame {
+public class Admin_Staff extends javax.swing.JFrame {
 
     /**
-     * Creates new form Admin_Client
+     * Creates new form Admin_Staff
      */
-    public Admin_Client() {
+    public Admin_Staff() {
         FlatLightLaf.setup();
-        initComponents();       
-        Show_Client_In_Table();
+        initComponents();
+        Show_Staff_In_Table();
         id_field.setVisible(false);
         
         scaleImage();
@@ -45,7 +45,7 @@ public class Admin_Client extends javax.swing.JFrame {
         ImageIcon scaledIcon = new ImageIcon(imgScale);
         label.setIcon(scaledIcon);
     }
-    
+     
     public Connection getConnection(){
         
         Connection con ;
@@ -58,36 +58,35 @@ public class Admin_Client extends javax.swing.JFrame {
         }       
     }
     
-    public ArrayList<Client> getClientList(){
+    public ArrayList<Staff> getStaffList(){
         
-        ArrayList<Client> clientList = new ArrayList<Client>();
+        ArrayList<Staff> staffList = new ArrayList<Staff>();
         Connection connection = getConnection();
         
-        String query = "SELECT * FROM client ";
+        String query = "SELECT * FROM staff ";
         Statement st;
         ResultSet rs;
         
         try{
             st = connection.createStatement();
             rs = st.executeQuery(query);
-            Client client;
+            Staff staff;
             while(rs.next()){
                 
-                 client = new Client(rs.getInt("id"),rs.getString("name"),rs.getString("surname"),rs.getString("email"),rs.getString("password"),rs.getString("security_question"),rs.getString("security_answer"),rs.getTimestamp("date"));
-                 clientList.add(client);
+                 staff = new Staff(rs.getInt("id"),rs.getString("name"),rs.getString("surname"),rs.getString("email"),rs.getString("password"),rs.getString("contact_number"),rs.getString("role"),rs.getTimestamp("date"));
+                 staffList.add(staff);
             }
             
         }catch(Exception e){
             JOptionPane.showMessageDialog(null,"Somethink went wrong","title",JOptionPane.WARNING_MESSAGE);
         }
         
-        return clientList;
+        return staffList;
     }
     
-    
-    public void Show_Client_In_Table(){
-        ArrayList<Client> list = getClientList();
-        DefaultTableModel model = (DefaultTableModel)Table_Display_Clients.getModel();
+     public void Show_Staff_In_Table(){
+        ArrayList<Staff> list = getStaffList();
+        DefaultTableModel model = (DefaultTableModel)Table_Display_Staff.getModel();
         Object [] row = new Object[8];
         for(int i = 0; i < list.size(); i++){
             
@@ -96,15 +95,15 @@ public class Admin_Client extends javax.swing.JFrame {
              row[2] = list.get(i).getSurname();
              row[3] = list.get(i).getEmail();
              row[4] = list.get(i).getPassword();
-             row[5] = list.get(i).getSecurity_question();
-             row[6] = list.get(i).getSecurity_answer();
+             row[5] = list.get(i).getContact_number();
+             row[6] = list.get(i).getRole();
              row[7] = list.get(i).getDate();
              
              model.addRow(row);
         }
     }
      
-    public void executeSQLQuery(String query, String message){
+      public void executeSQLQuery(String query, String message){
         
         Connection con = getConnection();
         Statement st;
@@ -112,9 +111,9 @@ public class Admin_Client extends javax.swing.JFrame {
             st = con.createStatement();
             if((st.executeUpdate(query)) == 1){
                 
-                DefaultTableModel model = (DefaultTableModel)Table_Display_Clients.getModel();
+                DefaultTableModel model = (DefaultTableModel)Table_Display_Staff.getModel();
                 model.setRowCount(0);
-                Show_Client_In_Table();
+                Show_Staff_In_Table();
                 
                 JOptionPane.showMessageDialog(null,"Data " + message + " Succesfuly","title",JOptionPane.INFORMATION_MESSAGE);
             }else{
@@ -153,26 +152,25 @@ public class Admin_Client extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        answer_field = new javax.swing.JTextField();
+        role_field = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         surname_field = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         email_field = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         password_field = new javax.swing.JTextField();
-        add_button = new javax.swing.JButton();
-        update_button = new javax.swing.JButton();
-        delete_button = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         name_field = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        security_field = new javax.swing.JTextField();
+        contact_field = new javax.swing.JTextField();
         id_field = new javax.swing.JTextField();
+        add_button = new javax.swing.JButton();
+        update_button = new javax.swing.JButton();
+        delete_button = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        Table_Display_Clients = new javax.swing.JTable();
+        Table_Display_Staff = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new java.awt.Dimension(1500, 820));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -378,23 +376,23 @@ public class Admin_Client extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(label, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(client_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(client_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(rooms_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(rooms_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(restaurant_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(restaurant_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(staff_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(staff_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(gallery_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(gallery_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(news_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(news_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(messages_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(messages_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(profile_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(profile_button, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                 .addGap(150, 150, 150)
-                .addComponent(logout_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(logout_button, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
         );
 
         jPanel3.setBackground(new java.awt.Color(237, 200, 119));
@@ -402,7 +400,7 @@ public class Admin_Client extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 48)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("        Clients");
+        jLabel1.setText("        Staff");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -436,8 +434,8 @@ public class Admin_Client extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Name:");
 
-        answer_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        answer_field.setForeground(new java.awt.Color(0, 0, 0));
+        role_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        role_field.setForeground(new java.awt.Color(0, 0, 0));
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 0, 0));
@@ -459,6 +457,20 @@ public class Admin_Client extends javax.swing.JFrame {
 
         password_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         password_field.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setText("Contact-number:");
+
+        name_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        name_field.setForeground(new java.awt.Color(0, 0, 0));
+
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel8.setText("Role:");
+
+        contact_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        contact_field.setForeground(new java.awt.Color(0, 0, 0));
 
         add_button.setBackground(new java.awt.Color(237, 203, 118));
         add_button.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -523,26 +535,6 @@ public class Admin_Client extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel7.setText("Security_question:");
-
-        name_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        name_field.setForeground(new java.awt.Color(0, 0, 0));
-
-        jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel8.setText("Security_answer:");
-
-        security_field.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        security_field.setForeground(new java.awt.Color(0, 0, 0));
-
-        id_field.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                id_fieldActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -562,100 +554,101 @@ public class Admin_Client extends javax.swing.JFrame {
                                 .addGap(94, 94, 94)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addGap(131, 131, 131)
+                                .addGap(120, 120, 120)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(surname_field)
-                            .addComponent(email_field)
-                            .addComponent(name_field)
-                            .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(email_field, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(password_field)
+                            .addComponent(name_field)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(125, 125, 125)))
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(35, 35, 35)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(18, 18, 18)
-                                .addComponent(answer_field, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel4Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(security_field, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(90, Short.MAX_VALUE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
+                        .addGap(39, 39, 39)
                         .addComponent(id_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(9, 9, 9)))
+                .addGap(69, 69, 69)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(91, 91, 91)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(contact_field, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(role_field))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(add_button, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                    .addComponent(delete_button, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                .addGap(77, 77, 77))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addGap(15, 15, 15)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(id_field))
-                .addGap(30, 30, 30)
+                    .addComponent(id_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(name_field))
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-                        .addComponent(security_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(24, 24, 24)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(surname_field)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(answer_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(contact_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(role_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel4)
+                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addComponent(surname_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(email_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(21, 21, 21)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(password_field, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(6, 6, 6))
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(61, 61, 61)
-                .addComponent(add_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(16, 16, 16))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(add_button, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(update_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(delete_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(33, 33, 33))
+                .addComponent(update_button, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(delete_button, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
 
-        Table_Display_Clients.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        Table_Display_Clients.setForeground(new java.awt.Color(0, 0, 0));
-        Table_Display_Clients.setModel(new javax.swing.table.DefaultTableModel(
+        Table_Display_Staff.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        Table_Display_Staff.setForeground(new java.awt.Color(0, 0, 0));
+        Table_Display_Staff.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Name", "Surname", "E-mail", "Password", "Security-question", "Security-answer", "Date"
+                "ID", "Name", "Surname", "E-mail", "Password", "Contact-number", "Role", "Date"
             }
         ));
-        Table_Display_Clients.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        Table_Display_Clients.addMouseListener(new java.awt.event.MouseAdapter() {
+        Table_Display_Staff.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        Table_Display_Staff.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                Table_Display_ClientsMouseClicked(evt);
+                Table_Display_StaffMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(Table_Display_Clients);
+        jScrollPane1.setViewportView(Table_Display_Staff);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -665,9 +658,10 @@ public class Admin_Client extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -675,9 +669,10 @@ public class Admin_Client extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(9, 9, 9)
-                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 465, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -821,11 +816,23 @@ public class Admin_Client extends javax.swing.JFrame {
     }//GEN-LAST:event_profile_buttonActionPerformed
 
     private void jTextField2KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextField2KeyReleased
-        DefaultTableModel obj = (DefaultTableModel) Table_Display_Clients.getModel();
+        DefaultTableModel obj = (DefaultTableModel) Table_Display_Staff.getModel();
         TableRowSorter<DefaultTableModel> obj1 = new TableRowSorter<>(obj);
-        Table_Display_Clients.setRowSorter(obj1);
+        Table_Display_Staff.setRowSorter(obj1);
         obj1.setRowFilter(RowFilter.regexFilter(jTextField2.getText()));
     }//GEN-LAST:event_jTextField2KeyReleased
+
+    private void Table_Display_StaffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Table_Display_StaffMouseClicked
+        int i = Table_Display_Staff.getSelectedRow();
+        TableModel model = Table_Display_Staff.getModel();
+        id_field.setText(model.getValueAt(i, 0).toString());
+        name_field.setText(model.getValueAt(i,1).toString());
+        surname_field.setText(model.getValueAt(i,2).toString());
+        email_field.setText(model.getValueAt(i,3).toString());
+        password_field.setText(model.getValueAt(i,4).toString());
+        contact_field.setText(model.getValueAt(i,5).toString());
+        role_field.setText(model.getValueAt(i,6).toString());
+    }//GEN-LAST:event_Table_Display_StaffMouseClicked
 
     private void add_buttonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_add_buttonMouseEntered
         add_button.setForeground(Color.WHITE);
@@ -836,8 +843,8 @@ public class Admin_Client extends javax.swing.JFrame {
     }//GEN-LAST:event_add_buttonMouseExited
 
     private void add_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_add_buttonActionPerformed
-        Add_Client ac = new Add_Client();
-        ac.show();
+        Add_Staff af = new Add_Staff();
+        af.show();
     }//GEN-LAST:event_add_buttonActionPerformed
 
     private void update_buttonMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_update_buttonMouseEntered
@@ -849,7 +856,7 @@ public class Admin_Client extends javax.swing.JFrame {
     }//GEN-LAST:event_update_buttonMouseExited
 
     private void update_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_update_buttonActionPerformed
-        String query = "update client set name='"+name_field.getText()+"', surname='"+surname_field.getText()+"', email='"+email_field.getText()+"', password='"+surname_field.getText()+"', security_question='"+security_field.getText()+"', security_answer='"+answer_field.getText()+"' where id =" + id_field.getText();
+        String query = "update staff set name='"+name_field.getText()+"', surname='"+surname_field.getText()+"', email='"+email_field.getText()+"', password='"+surname_field.getText()+"', contact_number='"+contact_field.getText()+"', role='"+role_field.getText()+"' where id =" + id_field.getText();
         executeSQLQuery(query,"Updated");
     }//GEN-LAST:event_update_buttonActionPerformed
 
@@ -862,25 +869,9 @@ public class Admin_Client extends javax.swing.JFrame {
     }//GEN-LAST:event_delete_buttonMouseExited
 
     private void delete_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete_buttonActionPerformed
-        String query = "delete from client where id =" + id_field.getText();
+        String query = "delete from staff where id =" + id_field.getText();
         executeSQLQuery(query,"Deleted");
     }//GEN-LAST:event_delete_buttonActionPerformed
-
-    private void id_fieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_id_fieldActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_id_fieldActionPerformed
-
-    private void Table_Display_ClientsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Table_Display_ClientsMouseClicked
-        int i = Table_Display_Clients.getSelectedRow();
-        TableModel model = Table_Display_Clients.getModel();
-        id_field.setText(model.getValueAt(i, 0).toString());
-        name_field.setText(model.getValueAt(i,1).toString());
-        surname_field.setText(model.getValueAt(i,2).toString());
-        email_field.setText(model.getValueAt(i,3).toString());
-        password_field.setText(model.getValueAt(i,4).toString());
-        security_field.setText(model.getValueAt(i,5).toString());
-        answer_field.setText(model.getValueAt(i,6).toString());
-    }//GEN-LAST:event_Table_Display_ClientsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -899,29 +890,29 @@ public class Admin_Client extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Admin_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Admin_Staff.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Admin_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Admin_Staff.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Admin_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Admin_Staff.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Admin_Client.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Admin_Staff.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Admin_Client().setVisible(true);
+                new Admin_Staff().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTable Table_Display_Clients;
+    private javax.swing.JTable Table_Display_Staff;
     private javax.swing.JButton add_button;
-    private javax.swing.JTextField answer_field;
     private javax.swing.JButton client_button;
+    private javax.swing.JTextField contact_field;
     private javax.swing.JButton delete_button;
     private javax.swing.JTextField email_field;
     private javax.swing.JButton gallery_button;
@@ -948,8 +939,8 @@ public class Admin_Client extends javax.swing.JFrame {
     private javax.swing.JTextField password_field;
     private javax.swing.JButton profile_button;
     private javax.swing.JButton restaurant_button;
+    private javax.swing.JTextField role_field;
     private javax.swing.JButton rooms_button;
-    private javax.swing.JTextField security_field;
     private javax.swing.JButton staff_button;
     private javax.swing.JTextField surname_field;
     private javax.swing.JButton update_button;
